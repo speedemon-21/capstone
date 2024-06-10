@@ -1,34 +1,61 @@
-import { useState } from 'react';
-import './CategoryDropdown.scss'; 
-import greece from '../../assets/Images/greece.jpg';
-import iceland from '../../assets/Images/iceland.jpg';
-import hawaii from '../../assets/Images/hawaii.jpg';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import './CategoryDropdown.scss';
+import noImage from '../../assets/Images/noImage.jpeg';
 
-const categories = {
-  "Category 1": { img: hawaii, description: 'Description for Category 1' },
-  "Category 2": { img: iceland, description: 'Description for Category 2' },
-  "Category 3": { img: greece, description: 'Description for Category 3' },
-};
 
 const CategoryDropdown = () => {
-    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const [items, setItems] = useState([]);
+    const [filteredItems, setFilteredItems] = useState([]);
+  
+    useEffect(() => {
+      // Fetch all items from the API
+      fetch('http://localhost:8080/api/inventory/')
+        .then(response => response.json())
+        .then(data => {
+          setItems(data);
+          // Extract unique categories from the fetched data
+          const uniqueCategories = [...new Set(data.map(item => item.category))];
+          setCategories(uniqueCategories);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    }, []);
   
     const handleSelect = (event) => {
-      setSelectedCategory(categories[event.target.value]);
+      const category = event.target.value;
+  
+      if (category) {
+        // Filter items based on selected category
+        const filtered = items.filter(item => item.category === category);
+        setFilteredItems(filtered);
+      } else {
+        setFilteredItems([]); // Clear filtered items if no category is selected
+      }
     };
   
     return (
       <div className="category-dropdown">
         <select onChange={handleSelect}>
           <option value="">Select a category</option>
-          {Object.keys(categories).map((category) => (
-            <option key={category} value={category}>{category}</option>
+          {categories.map((category, index) => (
+            <option key={index} value={category}>{category}</option>
           ))}
         </select>
-        {selectedCategory && (
+        {filteredItems.length > 0 && (
           <div className="category-display">
-            <img src={selectedCategory.img} alt={selectedCategory.description} />
-            <p>{selectedCategory.description}</p>
+            {filteredItems.map((item) => (
+              <div key={item.id} className="item">
+                <Link to={`/item/${item.id}`}>
+                  <img src={item.url || noImage} alt={item.item_name} />
+                </Link>
+                <p><strong>{item.item_name}</strong></p>
+                <p>{item.description}</p>
+                <p>Status: {item.status}</p>
+                <p>Quantity: {item.quantity}</p>
+                <p>Price: ${item.price}</p>
+              </div>
+            ))}
           </div>
         )}
       </div>

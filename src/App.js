@@ -1,26 +1,33 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-// import InventoryPage from "./pages/Inventory/Inventory";
-// import WarehousePage from "./pages/Warehouse/Warehouse";
-// import EditItemPage from "./pages/EditItem/EditItem";
-// import WarehouseDetails from "./components/WarehouseDetails/WarehouseDetails";
-// import InventoryDetailsCard from "../src/components/ItemDetailsCard/ItemDetailsCard";
-// import AddInventoryItem from "./components/AddInventoryItem/AddInventoryItem";
-// //import "./App.scss";
-// import Navigation from "./components/Navigation/Navigation";
-// import AddWarehouse from "./components/AddWarehouse/AddWarehouse";
-// import Footer from "./components/Footer/Footer";
-// import EditWarehouse from "./components/EditWarehouse/EditWarehouse";
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+
 import StartingPage from "./pages/Starting/Starting";
 import Login from './components/Login/Login';
+import ItemDetailsPage from './pages/ItemDetailPage/ItemDetailPage';
+import SignUp from './components/SignUp/SignUp';
+import CheckoutPage from './pages/CheckOut/CheckOutPage';
+const isAuthenticated = () => {
+  return !!localStorage.getItem('token');
+};
 
-const App = () => (
-  <Router>
-    <Routes>
-      <Route path="/" element={<StartingPage />} />
-      <Route path="/login" element={<Login />} />
-    </Routes>
-  </Router>
-);
 
+const ProtectedRoute = ({ element, ...rest }) => {
+  return isAuthenticated() ? element : <Navigate to="/login" />;
+};
+
+const App = () => {
+  return (
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/" element={<StartingPage  />} />
+          <Route path="/item/:id" element={<ProtectedRoute element={<ItemDetailsPage />} />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+};
 
 export default App;

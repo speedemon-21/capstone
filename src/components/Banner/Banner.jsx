@@ -2,14 +2,13 @@
 import './Banner.scss';  
 import { useState } from 'react';
 import greece from '../../assets/Images/greece.jpg';
-import hero from '../../assets/Images/hero.png';
 import iceland from '../../assets/Images/iceland.jpg';
 import hawaii from '../../assets/Images/hawaii.jpg';
 
 
 
 const images = [
-  greece, hero, iceland, hawaii
+  greece, iceland, hawaii
 
 ];
 const Banner = () => {
