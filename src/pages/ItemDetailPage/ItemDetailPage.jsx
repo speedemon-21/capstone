@@ -1,3 +1,5 @@
+// ItemDetailsPage.jsx
+
 import { useEffect, useState, useContext } from 'react';
 import { CartContext } from '../../components/ShoppingCart/CartContext.jsx';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -5,7 +7,8 @@ import './ItemDetailPage.scss';
 import backArrow from '../../assets/Icons/arrow_back-24px.svg';
 import noImage from '../../assets/Images/noImage.jpeg';
 import Modal from '../../components/Modal/Modal.jsx';
-import cartIcon from '../../assets/Images/cart.png'; 
+import PageHeader from '../../components/PageHeader/PageHeader.jsx';
+import Footer from '../../components/Footer/Footer.jsx';
 
 const ItemDetailsPage = () => {
   const { dispatch } = useContext(CartContext);
@@ -46,32 +49,34 @@ const ItemDetailsPage = () => {
   }
 
   return (
-    <div className="item-details-page">
-      <div className="header">
-        <div className="back-button" onClick={() => navigate(-1)}>
-          <img src={backArrow} alt="Go Back" />
+    <>
+      <PageHeader />
+      <div className="item-details-page">
+        <div className="item-details-page__header">
+          <div className="item-details-page__back-button" onClick={() => navigate('/')}>
+            <img src={backArrow} alt="Go Back" />
+          </div>
         </div>
-        <div className="cart-icon" onClick={() => navigate('/checkout')}>
-          <img src={cartIcon} alt="Cart" />
-        </div>
+        <h1 className="item-details-page__title">{item.item_name}</h1>
+        <img src={item.url || noImage} alt={item.item_name} className="item-details-page__image"/>
+        <p className="item-details-page__description">{item.description}</p>
+        <p className={`item-details-page__status ${item.status === 'Out of Stock' ? 'item-details-page__status--out-of-stock' : 'item-details-page__status--in-stock'}`}>
+          Status: {item.status}
+        </p>
+        <h2 className="item-details-page__name">{item.name}</h2>
+        <p className="item-details-page__description">{item.description}</p>
+        <input
+          type="number"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+          min="1"
+          className="item-details-page__quantity"
+        />
+        <button onClick={addToCart} className="item-details-page__add-to-cart">Add to Cart</button>
+        <Modal isOpen={isModalOpen} message={modalMessage} onClose={closeModal} />
       </div>
-      <h1>{item.item_name}</h1>
-      <img src={item.url || noImage} alt={item.item_name} />
-      <p>{item.description}</p>
-      <p className={`status ${item.status === 'Out of Stock' ? 'out-of-stock' : 'in-stock'}`}>
-        Status: {item.status}
-      </p>
-      <h2>{item.name}</h2>
-      <p>{item.description}</p>
-      <input
-        type="number"
-        value={quantity}
-        onChange={(e) => setQuantity(e.target.value)}
-        min="1"
-      />
-      <button onClick={addToCart}>Add to Cart</button>
-      <Modal isOpen={isModalOpen} message={modalMessage} onClose={closeModal} />
-    </div>
+      <Footer />
+    </>
   );
 };
 

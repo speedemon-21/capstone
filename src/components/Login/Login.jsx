@@ -1,29 +1,25 @@
+// Login.jsx
+
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Login.scss';
+import backArrow from '../../assets/Icons/arrow_back-24px.svg';
 
 const Login = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('token', data.token); // Save the JWT token in local storage
-        navigate('/');
+      // Simulating login with username and password
+      // You may replace this with actual login logic
+      if (username && password) {
+        // Redirect to the user's page (/username)
+        navigate(`/${username}`);
       } else {
         setError('Invalid username or password');
       }
@@ -32,35 +28,47 @@ const Login = () => {
     }
   };
 
+  const handleBack = () => {
+    navigate('/'); // Navigate to the home page
+  };
+
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleLogin} className="login-form">
-        <div className="form-group">
-          <label htmlFor="username">Username</label>
+    <div className="login__container">
+      <img
+        src={backArrow}
+        alt="Go back"
+        onClick={handleBack}
+        className="back-arrow"
+      />
+      <h2 className="login__title">Login</h2>
+      <form onSubmit={handleLogin} className="login__form">
+        <div className="login__form-group">
+          <label htmlFor="username" className="login__label">Username</label>
           <input
             type="text"
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            className="login__input"
             required
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
+        <div className="login__form-group">
+          <label htmlFor="password" className="login__label">Password</label>
           <input
             type="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="login__input"
             required
           />
         </div>
-        {error && <p className="error-message">{error}</p>}
-        <button type="submit" className="login-button">Login</button>
+        {error && <p className="login__error-message">{error}</p>}
+        <button type="submit" className="login__login-button">Login</button>
       </form>
-      <p className="signup-prompt">
-        Don't have an account? <Link to="/signup" className="signup-link">Sign Up</Link>
+      <p className="login__signup-prompt">
+        Don't have an account? <Link to="/signup" className="login__signup-link">Sign Up</Link>
       </p>
     </div>
   );

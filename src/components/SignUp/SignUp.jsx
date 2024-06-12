@@ -1,12 +1,16 @@
+// SignUp.jsx
+
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './SignUp.scss';
+import PageHeader from '../PageHeader/PageHeader';
+import backArrow from '../../assets/Icons/arrow_back-24px.svg';
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   const handleSignUp = async (event) => {
     event.preventDefault();
@@ -30,37 +34,52 @@ const SignUp = () => {
     }
   };
 
+  const handleBack = () => {
+    navigate(-1); // Navigate back to the previous page
+  };
+
   return (
-    <div className="signup-container">
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSignUp} className="signup-form">
-        <div className="form-group">
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {error && <p className="error-message">{error}</p>}
-        <button type="submit" className="signup-button">Sign Up</button>
-      </form>
-      <p className="login-prompt">
-        Already have an account? <Link to="/login" className="login-link">Login</Link>
-      </p>
-    </div>
+    <>
+      <PageHeader />
+      <div className="signup__container">
+        <img
+          src={backArrow}
+          alt="Go back"
+          onClick={handleBack}
+          className="back-arrow"
+        />
+        <h2 className="signup__title">Sign Up</h2>
+        <form onSubmit={handleSignUp} className="signup__form">
+          <div className="signup__form-group">
+            <label htmlFor="username" className="signup__label">Username</label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="signup__input"
+              required
+            />
+          </div>
+          <div className="signup__form-group">
+            <label htmlFor="password" className="signup__label">Password</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="signup__input"
+              required
+            />
+          </div>
+          {error && <p className="signup__error-message">{error}</p>}
+          <button type="submit" className="signup__signup-button">Sign Up</button>
+        </form>
+        <p className="signup__login-prompt">
+          Already have an account? <Link to="/login" className="signup__login-link">Login</Link>
+        </p>
+      </div>
+    </>
   );
 };
 
