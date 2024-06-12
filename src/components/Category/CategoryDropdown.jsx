@@ -1,8 +1,9 @@
+// CategoryDropdown.jsx
+
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './CategoryDropdown.scss';
 import noImage from '../../assets/Images/noImage.jpeg';
-
 
 const CategoryDropdown = () => {
     const [categories, setCategories] = useState([]);
@@ -36,8 +37,9 @@ const CategoryDropdown = () => {
   
     return (
       <div className="category-dropdown">
+        <p className="category-dropdown__prompt">Select a category to explore:</p>
         <select onChange={handleSelect}>
-          <option value="">Select a category</option>
+          <option value="">All Categories</option>
           {categories.map((category, index) => (
             <option key={index} value={category}>{category}</option>
           ))}
@@ -57,6 +59,9 @@ const CategoryDropdown = () => {
               </div>
             ))}
           </div>
+        )}
+        {filteredItems.length === 0 && (
+          <p className="no-items-message">No items found for the selected category. Try another one!</p>
         )}
       </div>
     );
